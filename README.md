@@ -1,6 +1,17 @@
 # CS272 Project AI Album Backend
 This repository holds the backend part of the AI album project.
 
+## ⚙️ Environment Configuration
+
+We are using the latest pytorch environment. You can find the download command on the [official website](https://pytorch.org/get-started/locally/).
+
+It is better to keep the environment consistent. My specific environment is as follows. Please install the corresponding version of the library for your platform.
+
+- python 3.9
+- pytorch 1.13.0
+- torchaudio 0.13.0 
+- torchvision 0.14.0
+
 ## 🌲 Project Structure
 
 The project structure is as follows, and the content below is produced using `tree .` command.
@@ -40,3 +51,10 @@ app.register_blueprint(densenet_api)
 ```
 
 Last but not least, you should test your api. Please write this part of code under the `test` directory. Alternatively, you can use GUI tools such as postman to test your api.
+
+## References
+
+Here are some references that may be useful to you.
+
+- [Deploying PyTorch in Python via a REST API with Flask](https://pytorch.org/tutorials/intermediate/flask_rest_api_tutorial.html)
+- [Introduction to TorchScript](https://pytorch.org/tutorials/beginner/Intro_to_TorchScript_tutorial.html)
