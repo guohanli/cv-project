@@ -13,7 +13,6 @@ def get_covers():
 @image_classification_api.route('/get_category_imgs')
 def get_category_imgs():
     category = request.args.get("category")
-    print(category)
     # todo 邱佳存，根据种类找到对应的图片数组
     return jsonify(
         [{'src': 'http://127.0.0.1:5000/jack.png', 'id': 'jack.png'},
