@@ -24,6 +24,7 @@ The project structure is as follows, and the content below is produced using `tr
 ├── src
 │   ├── api : where you expose the api of your model, one model one file.
 │   ├── app.py : entry point for the project.
+│   ├── utils.py : some handy functions you will regret missing.
 │   └── model : where you write methods to load model and inference.
 └── test : where you test whether your api works.
 
