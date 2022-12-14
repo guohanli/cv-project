@@ -26,11 +26,11 @@ def get_somebody_faces():
          {'src': 'http://127.0.0.1:5000/dog.jpeg', 'id': 'dog.jpeg'}])
 
 
-@face_api.route('/get_smile_face')
-def get_somebody_faces():
+@face_api.route('/get_animate')
+def get_animate():
     img_url = request.args.get("img_url")
     img_path = img_url2path(img_url)
     img_name = img_path2name(img_path)
-    # todo 王婧馨，获取生成的笑脸的路径
-    img_smile_path = None
-    return jsonify({'src': img_smile_path, 'id': img_name})
+    # todo 王婧馨，获取生成的动画图片的路径
+    img_animate_path = None
+    return jsonify({'src': img_animate_path, 'id': img_name})
