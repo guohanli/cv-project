@@ -6,9 +6,19 @@ import torch
 from PIL import Image
 from torchvision.transforms import transforms
 
+"""
+Some concepts.
+img_path: just as '/Users/lgh/PycharmProjects/cv-project/resource/album/dog.jpeg'
+img_name: just as 'dog.jpeg'
+url_path: just as 'http://127.0.0.1:5000/dog.jpeg'
+xxx_list: python list(like array in other language) with xxx as element
+"""
+port = 5000
+
 current_path = os.path.dirname(__file__)
 album_path = os.path.join(current_path, '..', 'resource', 'album')
 meta_json_path = os.path.join(album_path, 'meta.json')
+url_prefix = 'http://127.0.0.1:' + str(port) + '/'
 default_transforms = transforms.Compose([transforms.Resize(255),
                                          transforms.CenterCrop(224),
                                          transforms.ToTensor(),
@@ -40,6 +50,10 @@ def img_path2name(img_path):
     return os.path.basename(img_path)
 
 
+def img_name2path(img_name):
+    return os.path.abspath(os.path.join(album_path, img_name))
+
+
 def img_path_list2name_list(img_path_list):
     return [img_path2name(img_path) for img_path in img_path_list]
 
@@ -62,6 +76,21 @@ def get_img_path_list_for_certain_category(target_category):
 
 def get_people_img_path_list():
     return get_img_path_list_for_certain_category('people')
+
+
+def img_path2url(img_path):
+    img_name = os.path.basename(img_path)
+    return url_prefix + img_name
+
+
+def img_url2path(img_url):
+    img_name = os.path.basename(img_url)
+    return img_name2path(img_name)
+
+
+def img_path_list2url_list(img_path_list):
+    # this function not only works for img_path_list, but also for img_name_list
+    return list(map(lambda x: img_path2url(x), img_path_list))
 
 
 def _transform_PIL_image2tensor(image, custom_transforms=None):
@@ -102,3 +131,8 @@ if __name__ == '__main__':
 
     imgs = transform_image_path_list2tensor(img_path_list)
     print(imgs.shape)
+
+    url_list = img_path_list2url_list(img_path_list)
+    print(url_list)
+
+    print(img_url2path(url_list[0]))
