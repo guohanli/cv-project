@@ -2,6 +2,8 @@ import json
 import os
 
 import torch
+#import sys 
+#sys.path.append("../..")
 
 from utils import transform_image_bytes2tensor
 
