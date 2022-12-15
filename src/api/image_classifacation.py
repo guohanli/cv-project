@@ -1,3 +1,4 @@
+import json
 import os
 import time
 
@@ -50,6 +51,12 @@ def new_image():
     file_save_path = os.path.join(utils.album_path, file_name)
     file.save(file_save_path)
     get_single_img(file_name)
+    return ''
+
+@image_classification_api.route('/delete_image', methods=['POST'])
+def delete_image():
+    file_name = json.loads(request.data)
+    pass
     return ''
 
 
