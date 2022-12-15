@@ -8,11 +8,11 @@ import utils
 import sys 
 sys.path.append("..")
 
-from model.image_classification.detectmy import (main,parse_opt)
+from model.image_classification.detectmy_singleimg import get_single_img
 import linecache
 import os
 
-from utils import album_path
+
 
 image_classification_api = Blueprint('image_classification_api', __name__)
 
@@ -47,9 +47,37 @@ def get_label_path(category):
 def new_image():
     file = request.files.get('new_image')
     file_name = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time())) + '.jpeg'
-    file_save_path = os.path.join(album_path, file_name)
+    file_save_path = os.path.join(utils.album_path, file_name)
     file.save(file_save_path)
+    get_single_img(file_name)
     return ''
+
+
+def delete_img():
+    name = 0
+    current_path_album = os.path.dirname(__file__)
+    data_txt_path = os.path.join(current_path_album,'..','model','image_classification','data.txt')
+
+    file = open(data_txt_path)
+    lines = file.readlines()
+    length = len(lines)
+
+    i=0
+    while i<length:
+        text = linecache.getline(data_txt_path,i)
+    
+        if name in text:
+            del lines[i-1]
+            break
+
+        i+=1
+    file.close
+
+    filenew = open(data_txt_path,'w')
+    filenew.writelines(lines)
+    filenew.close()
+    
+
 
 
 @image_classification_api.route('/get_covers')
