@@ -1,3 +1,6 @@
+import os
+import time
+
 from flask import Blueprint
 from flask import jsonify, request
 import utils
@@ -8,6 +11,8 @@ sys.path.append("..")
 from model.image_classification.detectmy import (main,parse_opt)
 import linecache
 import os
+
+from utils import album_path
 
 image_classification_api = Blueprint('image_classification_api', __name__)
 
@@ -36,6 +41,15 @@ def get_label_path(category):
             path_list.append(text1)
         i += 1
     return(path_list)
+
+
+@image_classification_api.route('/new_image', methods=['POST'])
+def new_image():
+    file = request.files.get('new_image')
+    file_name = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time())) + '.jpeg'
+    file_save_path = os.path.join(album_path, file_name)
+    file.save(file_save_path)
+    return ''
 
 
 @image_classification_api.route('/get_covers')
