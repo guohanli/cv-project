@@ -9,8 +9,8 @@ face_api = Blueprint('face_api', __name__)
 @face_api.route('/get_face_covers')
 def get_face_covers():
     # todo 王婧馨
-    return jsonify([{'src': 'http://127.0.0.1:5000/jack.png', 'face_category_id': '1','count': "3"},
-                    {'src': 'http://127.0.0.1:5000/cat.png', 'face_category_id': '2','count': "5"}])
+    return jsonify([{'src': 'http://127.0.0.1:5000/jack.png', 'face_category_id': '1', 'count': '3'},
+                    {'src': 'http://127.0.0.1:5000/cat.png', 'face_category_id': '2', 'count': '5'}])
 
 
 @face_api.route('/get_somebody_faces')
