@@ -110,20 +110,16 @@ def get_somebody_faces():
     people = generate_people_json_file(url_list, count)
     with open(people_json_path, 'r', encoding='utf8') as fp:
         people_data = json.load(fp)
-    list1 = []
-    for i in range(len(url_list) - 1):
-        list1.append([])
-
-    for i in range(1, c):
-        url_path = get_peopleimg_path_list_for_certain_category(i)
-        for j in range(len(url_path)):
-            img_name = img_url2path(url_path[j])
-            name = img_path2name(img_name)
-            list1[i - 1].append(url_path[j])
-            list1[i - 1].append(name)
+    list1=[]
+    url_path = get_peopleimg_path_list_for_certain_category(face_category_id)
+    for j in range(len(url_path)):
+        img_name = img_url2path(url_path[j])
+        name = img_path2name(img_name)
+        list1.append(url_path[j])
+        list1.append(name)
             # print(url_path,name)
         # print(list1)
-        return jsonify(list1)
+    return jsonify(list)
 
 
 @face_api.route('/get_animate')

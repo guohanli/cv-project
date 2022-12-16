@@ -1,5 +1,6 @@
-D:\pycharm project\009demo\cv-project\resource\album\20221216002547.jpeg  people  
-D:\pycharm project\009demo\cv-project\resource\album\cat.png  animal  
-D:\pycharm project\009demo\cv-project\resource\album\dog.jpeg  animal  
-D:\pycharm project\009demo\cv-project\resource\album\jack.png  people  
-D:\pycharm project\009demo\cv-project\resource\album\20221216220251.jpeg  bicycle  
+E:\cv-project\resource\album\angelababy1.png  people  
+E:\cv-project\resource\album\angelababy2.png  people  
+E:\cv-project\resource\album\cat.png  animal  
+E:\cv-project\resource\album\dog.jpeg  animal  
+E:\cv-project\resource\album\jack.png  people  
+E:\cv-project\resource\album\man1.png  people  
