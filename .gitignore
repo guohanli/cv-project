@@ -5,5 +5,5 @@
 # python cache file
 **/__pycache__
 # generated file
-**/data.txt
-**/people.json
+src/model/image_classification/data.txt
+resource/album/people.json
