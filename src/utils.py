@@ -116,6 +116,10 @@ def transform_image_path_list2tensor(img_path_list, custom_transforms=None):
     return torch.cat(result, dim=0)
 
 
+def delete_image_file(img_path):
+    os.remove(img_path)
+
+
 if __name__ == '__main__':
     img_name_list = get_img_name_list()
     print(img_name_list)
