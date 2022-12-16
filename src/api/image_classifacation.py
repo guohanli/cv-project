@@ -5,7 +5,10 @@ from flask import Blueprint
 from flask import jsonify, request
 import utils
 
-import sys 
+import sys
+
+from model.recognition.run import handle_new_people_img, handle_delete_people_img
+
 sys.path.append("..")
 
 from model.image_classification.detectmy_singleimg import get_single_img
@@ -60,6 +63,9 @@ def new_image():
     new_path = linecache.getline(data_txt_path,length)
     lllabel = new_path.split('  ')[1]
     linecache.clearcache()
+
+    if lllabel == 'people':
+        handle_new_people_img(file_save_path)
     return lllabel
 
 @image_classification_api.route('/delete_image',methods=['POST'])
@@ -85,12 +91,17 @@ def delete_img():
             break
 
         i+=1
-    file.close
+    file.close()
 
     filenew = open(data_txt_path,'w')
     filenew.writelines(lines)
     filenew.close()
     linecache.clearcache()
+
+    # todo 邱佳存
+    lllable = None
+    if lllable == 'people':
+        handle_delete_people_img(delete_path)
     return ""
     
 

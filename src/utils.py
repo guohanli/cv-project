@@ -71,12 +71,6 @@ def img_path_list_people_name_list(img_path_list):
     return [img_path2name(img_path) for img_path in img_path_list]
 
 
-def generate_meta_json_file(img_path_list, img_category_list):
-    data = list(zip(img_path_list, img_category_list))
-    with open(meta_json_path, 'w') as f:
-        json.dump(data, f)
-
-
 def generate_people_json_file(img_path_list, img_category_list):
     data = list(zip(img_path_list, img_category_list))
     with open(people_json_path, 'w') as f:
@@ -128,9 +122,11 @@ def img_path2url(img_path):
     img_name = os.path.basename(img_path)
     return url_prefix + img_name
 
+
 def animate_img_path2url(animate_img_path):
     img_name = os.path.basename(animate_img_path)
     return url_prefix + 'animate_pic/' + img_name
+
 
 def img_url2path(img_url):
     img_name = os.path.basename(img_url)
@@ -178,7 +174,7 @@ if __name__ == '__main__':
 
     print(img_path_list2name_list(img_path_list))
 
-    generate_meta_json_file(img_path_list, ['people', 'people', 'cat', 'dog', 'people', 'people'])
+    # generate_meta_json_file(img_path_list, ['people', 'people', 'cat', 'dog', 'people', 'people'])
     print(get_people_img_path_list())
 
     # imgs = transform_image_path_list2tensor(img_path_list)

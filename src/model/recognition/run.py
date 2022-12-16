@@ -1,12 +1,11 @@
-import os
+import json
 
-import torch
 from facenet_pytorch.models.inception_resnet_v1 import InceptionResnetV1
 from facenet_pytorch.models.mtcnn import MTCNN
 
 from model.recognition.recognition import load_known_faces, match_faces
-from utils import device, album_path, get_people_img_path_list, img_path_list_people_name_list, img_path_list2url_list, \
-    generate_people_json_file
+from utils import device, get_people_img_path_list, img_path_list_people_name_list, img_path_list2url_list, \
+    generate_people_json_file, people_json_path, img_path2url
 
 
 def generate_people_json():
@@ -35,3 +34,27 @@ def generate_people_json():
     url_list = img_path_list2url_list(name)  # 'http://127.0.0.1:5000/angelababy1.png'
     # 创建一个只有people的json文件
     generate_people_json_file(url_list, count)
+
+
+def handle_new_people_img(new_img_path):
+    with open(people_json_path, 'r', encoding='utf8') as fp:
+        people_data = json.load(fp)
+    img_url_list, id_list = zip(*people_data)
+    # c是最新的类别id，在没有相似图片的情况下直接给新图片用
+    c = len(set(id_list)) + 2
+    # todo 王婧馨，将新图片和之前的图片比较，得到id，赋值给new_img_category
+    pass
+    new_img_category = None
+    new_img_url = img_path2url(new_img_path)
+    img_url_list.insert(0, new_img_url)
+    id_list.insert(0, new_img_category)
+    generate_people_json_file(img_url_list, id_list)
+
+
+def handle_delete_people_img(img_path):
+    with open(people_json_path, 'r', encoding='utf8') as fp:
+        people_data = json.load(fp)
+    img_url = img_path2url(img_path)
+    people_data = list(filter(lambda x: x[0] != img_url, people_data))
+    img_url_list, id_list = zip(*people_data)
+    generate_people_json_file(img_url_list, id_list)
