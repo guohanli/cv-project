@@ -19,6 +19,7 @@ port = 5000
 current_path = os.path.dirname(__file__)
 album_path = os.path.join(current_path, '..', 'resource', 'album')
 meta_json_path = os.path.join(album_path, 'meta.json')
+people_json_path = os.path.join(album_path, 'people.json')
 url_prefix = 'http://127.0.0.1:' + str(port) + '/'
 default_transforms = transforms.Compose([transforms.Resize(255),
                                          transforms.CenterCrop(224),
@@ -26,6 +27,7 @@ default_transforms = transforms.Compose([transforms.Resize(255),
                                          transforms.Normalize(
                                              [0.485, 0.456, 0.406],
                                              [0.229, 0.224, 0.225])])
+
 
 
 def get_img_name_list():
@@ -60,15 +62,30 @@ def img_name2path(img_name):
 def img_path_list2name_list(img_path_list):
     return [img_path2name(img_path) for img_path in img_path_list]
 
+def img_path_list_people_name_list(img_path_list):
+    return [img_path2name(img_path) for img_path in img_path_list]
 
 def generate_meta_json_file(img_path_list, img_category_list):
     data = list(zip(img_path_list, img_category_list))
     with open(meta_json_path, 'w') as f:
         json.dump(data, f)
 
+def generate_people_json_file(img_path_list, img_category_list):
+    data = list(zip(img_path_list, img_category_list))
+    with open(people_json_path, 'w') as f:
+        json.dump(data, f)
 
 def get_img_path_list_for_certain_category(target_category):
     with open(meta_json_path, 'r') as f:
+        path_category_list = json.load(f)
+    result = []
+    for (path, category) in path_category_list:
+        if category == target_category:
+            result.append(path)
+    return result
+
+def get_peopleimg_path_list_for_certain_category(target_category):
+    with open(people_json_path, 'r') as f:
         path_category_list = json.load(f)
     result = []
     for (path, category) in path_category_list:
@@ -150,14 +167,13 @@ if __name__ == '__main__':
 
     print(img_path_list2name_list(img_path_list))
 
-    generate_meta_json_file(img_path_list, ['cat', 'people', 'dog'])
-
+    generate_meta_json_file(img_path_list, ['people','people','cat', 'dog', 'people','people'])
     print(get_people_img_path_list())
 
-    imgs = transform_image_path_list2tensor(img_path_list)
-    print(imgs.shape)
-
+    # imgs = transform_image_path_list2tensor(img_path_list)
+    # print(imgs.shape)
+    #
     url_list = img_path_list2url_list(img_path_list)
     print(url_list)
-
-    print(img_url2path(url_list[0]))
+    #
+    #print(img_url2path(url_list[0]))
