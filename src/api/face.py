@@ -33,10 +33,6 @@ def get_face_covers():
 
 @face_api.route('/get_somebody_faces')
 def get_somebody_faces():
-    # todo 王婧馨
-    # help(MTCNN)
-    # help(InceptionResnetV1)
-    # 获取设备
     face_category_id = int(request.args.get('face_category_id'))
     with open(people_json_path, 'r', encoding='utf8') as fp:
         people_data = json.load(fp)
