@@ -27,6 +27,7 @@ default_transforms = transforms.Compose([transforms.Resize(255),
                                          transforms.Normalize(
                                              [0.485, 0.456, 0.406],
                                              [0.229, 0.224, 0.225])])
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 
@@ -96,8 +97,7 @@ def get_peopleimg_path_list_for_certain_category(target_category):
 
 def get_people_img_path_list():
     category = 'people'
-    current_path_data = os.path.dirname(__file__)   
-    current_path_data = os.path.join(current_path_data,'..')
+    current_path_data = os.path.dirname(__file__)
     label_path_data = os.path.join(current_path_data,'model','image_classification','data.txt')
 
     count=len(open(label_path_data,'r').readlines())
