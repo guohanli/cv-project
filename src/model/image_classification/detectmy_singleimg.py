@@ -214,7 +214,7 @@ def run(
                     content = f.read()
                     f.seek(0, 0)
                     f.write(ppp + content)
-
+            '''
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
                     if save_txt:  # Write to file
@@ -241,7 +241,7 @@ def run(
                 cv2.waitKey(1)  # 1 millisecond
 
             # Save results (image with detections)
-            '''
+            
             if save_img:
                 if dataset.mode == 'image':
                     cv2.imwrite(save_path, im0)
@@ -264,6 +264,13 @@ def run(
             '''
         # Print time (inference-only)
         LOGGER.info(f"{s}{'' if len(det) else '(no detections), '}{dt[1].dt * 1E3:.1f}ms")
+        if len(det) == 0:
+            file = open(label_path,'a')
+            file.write(str(Path(p)))
+            file.write('  ')
+            file.write('others')
+            file.write('\n')
+            file.close()
         #print('s',s)
         #print('len(det)',len(det))
 
