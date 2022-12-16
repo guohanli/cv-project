@@ -6,12 +6,12 @@ from flask import Blueprint
 from flask import jsonify, request
 
 import utils
-from model.recognition.run import handle_new_people_img, handle_delete_people_img
 
 sys.path.append("..")
 
 from model.image_classification.detectmy_singleimg import get_single_img
 import model.image_classification.detectmy
+from model.recognition.run import handle_new_people_img, handle_delete_people_img
 import linecache
 import os
 
