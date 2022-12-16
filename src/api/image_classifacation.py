@@ -1,7 +1,6 @@
-import json
 import os
 import time
-
+import json
 from flask import Blueprint
 from flask import jsonify, request
 import utils
@@ -53,15 +52,9 @@ def new_image():
     get_single_img(file_name)
     return ''
 
-@image_classification_api.route('/delete_image', methods=['POST'])
-def delete_image():
-    file_name = json.loads(request.data)
-    pass
-    return ''
-
-
+@image_classification_api.route('/delete_image',methods=['POST'])
 def delete_img():
-    name = 0
+    name = json.loads(request.data)
     current_path_album = os.path.dirname(__file__)
     data_txt_path = os.path.join(current_path_album,'..','model','image_classification','data.txt')
 

@@ -5,7 +5,7 @@ import os
 import torch
 from PIL import Image
 from torchvision.transforms import transforms
-
+from api.image_classifacation import get_face_path
 """
 Some concepts.
 img_path: just as '/Users/lgh/PycharmProjects/cv-project/resource/album/dog.jpeg'
@@ -75,7 +75,8 @@ def get_img_path_list_for_certain_category(target_category):
 
 
 def get_people_img_path_list():
-    return get_img_path_list_for_certain_category('people')
+    list = get_face_path()
+    return (list)
 
 
 def img_path2url(img_path):

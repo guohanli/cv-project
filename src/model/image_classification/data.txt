@@ -1,0 +1,6 @@
+D:\pycharm project\009demo\cv-project\resource\album\banana.jpg  people  fruit  laptop  
+D:\pycharm project\009demo\cv-project\resource\album\bicycle.png  bicycle  
+D:\pycharm project\009demo\cv-project\resource\album\cat.png  animal  
+D:\pycharm project\009demo\cv-project\resource\album\dog.jpeg  animal  
+D:\pycharm project\009demo\cv-project\resource\album\jack.png  people  
+D:\pycharm project\009demo\cv-project\resource\album\cat.png  animal  
