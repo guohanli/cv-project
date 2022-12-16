@@ -36,7 +36,6 @@ def get_img_name_list():
             if file.endswith("png") or file.endswith("jpg") or file.endswith("jpeg"):
                 img_name_list.append(file)
 
-    img_name_list = sorted(img_name_list, key=lambda x: os.path.getmtime(x))
     return img_name_list
 
 
@@ -47,6 +46,7 @@ def get_img_path_list():
         for file in files:
             if file.endswith("png") or file.endswith("jpg") or file.endswith("jpeg"):
                 img_path_list.append(os.path.abspath(os.path.join(root, file)))
+    img_path_list = sorted(img_path_list, key=lambda x: os.path.getmtime(x), reverse=True)
     return img_path_list
 
 
