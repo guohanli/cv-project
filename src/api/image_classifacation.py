@@ -41,6 +41,7 @@ def get_label_path(category):
             text1 = text.split('  ')[0]
             path_list.append(text1)
         i += 1
+    linecache.clearcache()
     return(path_list)
 
 
@@ -81,6 +82,7 @@ def delete_img():
     filenew = open(data_txt_path,'w')
     filenew.writelines(lines)
     filenew.close()
+    linecache.clearcache()
     return ""
     
 
@@ -89,20 +91,26 @@ def delete_img():
 @image_classification_api.route('/get_covers')
 def get_covers():
 
+    
     lists = []
     current_path_album = os.path.dirname(__file__)
     data_txt_path = os.path.join(current_path_album,'..','model','image_classification','data.txt')
-    length = len(linecache.getlines)
+    #file = open(data_txt_path,'r')
+    length = len(linecache.getlines(data_txt_path))
+    #length = len(file.readlines())
 
     j=1
     types = []
     while j<=length:
         type = linecache.getline(data_txt_path,j)
+        
+        #type = file.readline(j)
         type = type.split('  ')[1]
         types.append(type)
+        j=j+1
 
     types = list(set(types))
-
+    
     #types = ['people','animal','fruit','bicycle']
     
     for i in types:
@@ -112,7 +120,8 @@ def get_covers():
         coverss = covers[0]
         dict = {'img_path':utils.img_path2url(coverss),'category':i}
         lists.append(dict)
-
+    #file.close()
+    linecache.clearcache()
     return jsonify(lists)
     '''
     return jsonify([{'img_path': 'http://127.0.0.1:5000/jack.png', 'category': 'people'},
