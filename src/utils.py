@@ -1,11 +1,11 @@
 import io
 import json
-import os
 import linecache
+import os
+
 import torch
 from PIL import Image
 from torchvision.transforms import transforms
-
 
 """
 Some concepts.
@@ -28,7 +28,6 @@ default_transforms = transforms.Compose([transforms.Resize(255),
                                              [0.485, 0.456, 0.406],
                                              [0.229, 0.224, 0.225])])
 device = "cuda" if torch.cuda.is_available() else "cpu"
-
 
 
 def get_img_name_list():
@@ -56,6 +55,10 @@ def img_path2name(img_path):
     return os.path.basename(img_path)
 
 
+def img_url2name(img_url):
+    return os.path.basename(img_url)
+
+
 def img_name2path(img_name):
     return os.path.abspath(os.path.join(album_path, img_name))
 
@@ -63,18 +66,22 @@ def img_name2path(img_name):
 def img_path_list2name_list(img_path_list):
     return [img_path2name(img_path) for img_path in img_path_list]
 
+
 def img_path_list_people_name_list(img_path_list):
     return [img_path2name(img_path) for img_path in img_path_list]
+
 
 def generate_meta_json_file(img_path_list, img_category_list):
     data = list(zip(img_path_list, img_category_list))
     with open(meta_json_path, 'w') as f:
         json.dump(data, f)
 
+
 def generate_people_json_file(img_path_list, img_category_list):
     data = list(zip(img_path_list, img_category_list))
     with open(people_json_path, 'w') as f:
         json.dump(data, f)
+
 
 def get_img_path_list_for_certain_category(target_category):
     with open(meta_json_path, 'r') as f:
@@ -84,6 +91,7 @@ def get_img_path_list_for_certain_category(target_category):
         if category == target_category:
             result.append(path)
     return result
+
 
 def get_peopleimg_path_list_for_certain_category(target_category):
     with open(people_json_path, 'r') as f:
@@ -98,15 +106,15 @@ def get_peopleimg_path_list_for_certain_category(target_category):
 def get_people_img_path_list():
     category = 'people'
     current_path_data = os.path.dirname(__file__)
-    label_path_data = os.path.join(current_path_data,'model','image_classification','data.txt')
+    label_path_data = os.path.join(current_path_data, 'model', 'image_classification', 'data.txt')
 
-    count=len(open(label_path_data,'r').readlines())
-    print('count',count)
+    count = len(open(label_path_data, 'r').readlines())
+    print('count', count)
 
-    i=1
+    i = 1
     path_list = []
-    while i<=count:
-        text = linecache.getline(label_path_data,i)
+    while i <= count:
+        text = linecache.getline(label_path_data, i)
         if_category_in = category in text
         if if_category_in:
             text1 = text.split('  ')[0]
@@ -167,7 +175,7 @@ if __name__ == '__main__':
 
     print(img_path_list2name_list(img_path_list))
 
-    generate_meta_json_file(img_path_list, ['people','people','cat', 'dog', 'people','people'])
+    generate_meta_json_file(img_path_list, ['people', 'people', 'cat', 'dog', 'people', 'people'])
     print(get_people_img_path_list())
 
     # imgs = transform_image_path_list2tensor(img_path_list)
@@ -176,4 +184,4 @@ if __name__ == '__main__':
     url_list = img_path_list2url_list(img_path_list)
     print(url_list)
     #
-    #print(img_url2path(url_list[0]))
+    # print(img_url2path(url_list[0]))
