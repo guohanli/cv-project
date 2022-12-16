@@ -191,13 +191,11 @@ def run(
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_boxes(im.shape[2:], det[:, :4], im0.shape).round()
                 
-                file = open(label_path, mode = 'a')
                 ppp=str(p)
                 print('ppp',ppp)
                 #ppp=ppp[-8:]
-                file.write(ppp)
-                file.write('  ')
-                file.close()
+                ppp += '  '
+
                 
                 print('imagename',type(p))
                 # Print results
@@ -209,13 +207,14 @@ def run(
                     
                     #print('s:',s)
                     print('saris',names[int(c)])
-                    file = open(label_path, mode = 'a')
-                    file.write(names[int(c)])
-                    file.write('  ')
-                    file.close()
-                file = open(label_path, mode = 'a')
-                file.write('\n')
-                file.close()
+                    ppp += names[int(c)]
+                    ppp += '  '
+                ppp += '\n'
+                with open(label_path, mode='r+') as f:
+                    content = f.read()
+                    f.seek(0, 0)
+                    f.write(ppp + content)
+
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
                     if save_txt:  # Write to file
