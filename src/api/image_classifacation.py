@@ -93,9 +93,10 @@ def get_covers():
     for i in types:
         print('i',i)
         covers = get_label_path(i)
-        coverss = covers[0]
-        dict = {'img_path':utils.img_path2url(coverss),'category':i}
-        list.append(dict)
+        if covers != None:
+            coverss = covers[0]
+            dict = {'img_path':utils.img_path2url(coverss),'category':i}
+            list.append(dict)
 
     return jsonify(list)
     '''
