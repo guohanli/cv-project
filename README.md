@@ -12,6 +12,13 @@ It is better to keep the environment consistent. My specific environment is as f
 - torchaudio 0.13.0 
 - torchvision 0.14.0
 
+For yolo model, we need
+- opencv
+- pandas
+- ipython
+- PyYAML
+- matplotlib
+- seaborn
 ## 🌲 Project Structure
 
 The project structure is as follows, and the content below is produced using `tree .` command.

@@ -5,7 +5,9 @@ import os
 import torch
 from PIL import Image
 from torchvision.transforms import transforms
+
 from api.image_classifacation import get_face_path
+
 """
 Some concepts.
 img_path: just as '/Users/lgh/PycharmProjects/cv-project/resource/album/dog.jpeg'
@@ -33,6 +35,8 @@ def get_img_name_list():
         for file in files:
             if file.endswith("png") or file.endswith("jpg") or file.endswith("jpeg"):
                 img_name_list.append(file)
+
+    img_name_list = sorted(img_name_list, key=lambda x: os.path.getmtime(x))
     return img_name_list
 
 
