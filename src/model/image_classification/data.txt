@@ -1,8 +1,0 @@
-/Users/lgh/PycharmProjects/cv-project/resource/album/20221216214834.jpeg  others
-/Users/lgh/PycharmProjects/cv-project/resource/album/20221216222502.jpeg  animal  
-/Users/lgh/PycharmProjects/cv-project/resource/album/angelababy1.png  people  
-/Users/lgh/PycharmProjects/cv-project/resource/album/angelababy2.png  people  
-/Users/lgh/PycharmProjects/cv-project/resource/album/cat.png  animal  
-/Users/lgh/PycharmProjects/cv-project/resource/album/dog.jpeg  animal  
-/Users/lgh/PycharmProjects/cv-project/resource/album/jack.png  people  
-/Users/lgh/PycharmProjects/cv-project/resource/album/man1.png  people  
