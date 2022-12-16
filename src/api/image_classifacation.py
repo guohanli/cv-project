@@ -1,12 +1,11 @@
-import os
-import time
 import json
+import sys
+import time
+
 from flask import Blueprint
 from flask import jsonify, request
+
 import utils
-
-import sys
-
 from model.recognition.run import handle_new_people_img, handle_delete_people_img
 
 sys.path.append("..")
@@ -16,36 +15,34 @@ import model.image_classification.detectmy
 import linecache
 import os
 
-
-
 image_classification_api = Blueprint('image_classification_api', __name__)
 
-#输出所有label为people的路径的list
+
+# 输出所有label为people的路径的list
 def get_face_path():
     pathlist = get_label_path('people')
     return (pathlist)
 
-#输入标签，输出它们所在的路径list
+
+# 输入标签，输出它们所在的路径list
 def get_label_path(category):
-    
-    current_path_data = os.path.dirname(__file__)   
-    current_path_data = os.path.join(current_path_data,'..')
-    label_path_data = os.path.join(current_path_data,'model','image_classification','data.txt')
+    current_path_data = os.path.dirname(__file__)
+    current_path_data = os.path.join(current_path_data, '..')
+    label_path_data = os.path.join(current_path_data, 'model', 'image_classification', 'data.txt')
 
-    count=len(open(label_path_data,'r').readlines())
-    print('count',count)
+    count = len(open(label_path_data, 'r').readlines())
 
-    i=1
+    i = 1
     path_list = []
-    while i<=count:
-        text = linecache.getline(label_path_data,i)
+    while i <= count:
+        text = linecache.getline(label_path_data, i)
         if_category_in = category in text
         if if_category_in:
             text1 = text.split('  ')[0]
             path_list.append(text1)
         i += 1
     linecache.clearcache()
-    return(path_list)
+    return (path_list)
 
 
 @image_classification_api.route('/new_image', methods=['POST'])
@@ -57,10 +54,10 @@ def new_image():
     get_single_img(file_name)
 
     current_path_album = os.path.dirname(__file__)
-    data_txt_path = os.path.join(current_path_album,'..','model','image_classification','data.txt')
-    #file = open(data_txt_path,'r')
+    data_txt_path = os.path.join(current_path_album, '..', 'model', 'image_classification', 'data.txt')
+    # file = open(data_txt_path,'r')
     length = len(linecache.getlines(data_txt_path))
-    new_path = linecache.getline(data_txt_path,length)
+    new_path = linecache.getline(data_txt_path, length)
     lllabel = new_path.split('  ')[1]
     linecache.clearcache()
 
@@ -68,7 +65,8 @@ def new_image():
         handle_new_people_img(file_save_path)
     return lllabel
 
-@image_classification_api.route('/delete_image',methods=['POST'])
+
+@image_classification_api.route('/delete_image', methods=['POST'])
 def delete_img():
     name = json.loads(request.data)
 
@@ -76,24 +74,24 @@ def delete_img():
     utils.delete_image_file(delete_path)
 
     current_path_album = os.path.dirname(__file__)
-    data_txt_path = os.path.join(current_path_album,'..','model','image_classification','data.txt')
+    data_txt_path = os.path.join(current_path_album, '..', 'model', 'image_classification', 'data.txt')
 
     file = open(data_txt_path)
     lines = file.readlines()
     length = len(lines)
 
-    i=0
-    while i<length:
-        text = linecache.getline(data_txt_path,i)
-    
+    i = 0
+    while i < length:
+        text = linecache.getline(data_txt_path, i)
+
         if name in text:
-            del lines[i-1]
+            del lines[i - 1]
             break
 
-        i+=1
+        i += 1
     file.close()
 
-    filenew = open(data_txt_path,'w')
+    filenew = open(data_txt_path, 'w')
     filenew.writelines(lines)
     filenew.close()
     linecache.clearcache()
@@ -103,43 +101,38 @@ def delete_img():
     if lllable == 'people':
         handle_delete_people_img(delete_path)
     return ""
-    
-
 
 
 @image_classification_api.route('/get_covers')
 def get_covers():
-
-    
     lists = []
     current_path_album = os.path.dirname(__file__)
-    data_txt_path = os.path.join(current_path_album,'..','model','image_classification','data.txt')
-    #file = open(data_txt_path,'r')
+    data_txt_path = os.path.join(current_path_album, '..', 'model', 'image_classification', 'data.txt')
+    # file = open(data_txt_path,'r')
     length = len(linecache.getlines(data_txt_path))
-    #length = len(file.readlines())
+    # length = len(file.readlines())
 
-    j=1
+    j = 1
     types = []
-    while j<=length:
-        type = linecache.getline(data_txt_path,j)
-        
-        #type = file.readline(j)
+    while j <= length:
+        type = linecache.getline(data_txt_path, j)
+
+        # type = file.readline(j)
         type = type.split('  ')[1]
         types.append(type)
-        j=j+1
+        j = j + 1
 
     types = list(set(types))
-    
-    #types = ['people','animal','fruit','bicycle']
-    
+
+    # types = ['people','animal','fruit','bicycle']
+
     for i in types:
-        print('i',i)
         covers = get_label_path(i)
-        
+
         coverss = covers[0]
-        dict = {'img_path':utils.img_path2url(coverss),'category':i}
+        dict = {'img_path': utils.img_path2url(coverss), 'category': i}
         lists.append(dict)
-    #file.close()
+    # file.close()
     linecache.clearcache()
     return jsonify(lists)
     '''
@@ -151,42 +144,14 @@ def get_covers():
 @image_classification_api.route('/get_category_imgs')
 def get_category_imgs():
     category = request.args.get("category")
-    # todo 邱佳存，根据种类找到对应的图片数组
-    
-
-
-    '''
-    #获取label文件路径
-    current_path_data = os.path.dirname(__file__)
-    #print('11111111111111111',current_path_data)
-    current_path_data = os.path.join(current_path_data,'..')
-    #print(current_path_data)
-    label_path_data = os.path.join(current_path_data,'model','image_classification','data.txt')  
-
-    #获取文件行数
-    count=len(open(label_path_data,'r').readlines())
-    print('count',count)
-
-    #将指定label图片的路径全部找出
-    i=1
-    path_list = []
-    while i<=count:
-        text = linecache.getline(label_path_data,i)
-        if_category_in = category in text
-        if if_category_in:
-            text1 = text.split('  ')[0]
-            path_list.append(text1)
-        i += 1
-    '''
-    
     path_list = get_label_path(category)
     output_path_list = []
     j = 0
-    while j<len(path_list):
-        dict = {'src':utils.img_path2url(path_list[j]),'id':os.path.basename(path_list[j])}
-        output_path_list.append(dict)
-        j = j+1
-    
+    while j < len(path_list):
+        d = {'src': utils.img_path2url(path_list[j]), 'id': os.path.basename(path_list[j])}
+        output_path_list.append(d)
+        j = j + 1
+
     return jsonify(output_path_list)
 
     '''
@@ -198,6 +163,7 @@ def get_category_imgs():
          {'src': 'http://127.0.0.1:5000/cat.png', 'id': 'cat.png'},
          {'src': 'http://127.0.0.1:5000/dog.jpeg', 'id': 'dog.jpeg'}])
     '''
+
 
 if __name__ == '__main__':
     lists = get_face_path()

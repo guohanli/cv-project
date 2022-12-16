@@ -41,12 +41,10 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
 from models.common import DetectMultiBackend
 from yoloutils.dataloaders import IMG_FORMATS, VID_FORMATS, LoadImages, LoadScreenshots, LoadStreams
-from yoloutils.general import (LOGGER, Profile, check_file, check_img_size, check_imshow, check_requirements, colorstr, cv2,
-                           increment_path, non_max_suppression, print_args, scale_boxes, strip_optimizer, xyxy2xywh)
-from yoloutils.plots import Annotator, colors, save_one_box
+from yoloutils.general import (LOGGER, Profile, check_file, check_img_size, check_imshow, check_requirements,
+                               increment_path, non_max_suppression, print_args, scale_boxes, strip_optimizer)
+from yoloutils.plots import Annotator
 from yoloutils.torch_utils import select_device, smart_inference_mode
-
-
 
 
 @smart_inference_mode()
@@ -79,36 +77,35 @@ def run(
         dnn=False,  # use OpenCV DNN for ONNX inference
         vid_stride=1,  # video frame-rate stride
 ):
-    #read source image
+    # read source image
     source = str(source)
     # save inference images
-    save_img = not nosave and not source.endswith('.txt') 
-    #print('save_image:',save_img) #true
+    save_img = not nosave and not source.endswith('.txt')
+    # print('save_image:',save_img) #true
     is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
-    #print('Path(source)',Path(source))#yolov5-master/data/images
-    #print('is_file',is_file)#false
+    # print('Path(source)',Path(source))#yolov5-master/data/images
+    # print('is_file',is_file)#false
     is_url = source.lower().startswith(('rtsp://', 'rtmp://', 'http://', 'https://'))
-    #print('is_url',is_url)#false
+    # print('is_url',is_url)#false
     webcam = source.isnumeric() or source.endswith('.txt') or (is_url and not is_file)
-    #print('webcam',webcam)#false
+    # print('webcam',webcam)#false
     screenshot = source.lower().startswith('screen')
-    #print('screenshot',screenshot)#false
+    # print('screenshot',screenshot)#false
     if is_url and is_file:
         source = check_file(source)  # download
-        #print('source',source)#false
+        # print('source',source)#false
     #######################################################
     current_path = os.path.dirname(__file__)
-    label_path = os.path.join(current_path,'data.txt')
+    label_path = os.path.join(current_path, 'data.txt')
     ####################################################
     # Directories
     save_dir = Path(project)
-    print('save_dir',save_dir)
     (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
-    
+
     # Load model
     device = select_device(device)
     model = DetectMultiBackend(weights, device=device, dnn=dnn, data=data, fp16=half)
-    #print('model',model)
+    # print('model',model)
     stride, names, pt = model.stride, model.names, model.pt
     names[0] = 'people'
     names[46] = 'fruit'
@@ -124,11 +121,11 @@ def run(
     names[21] = 'animal'
     names[22] = 'animal'
     names[23] = 'animal'
-    #print('stride',stride)
-    #print('names',names)
-    #print('pt',pt)
+    # print('stride',stride)
+    # print('names',names)
+    # print('pt',pt)
     imgsz = check_img_size(imgsz, s=stride)  # check image size
-    #print('imgsz',imgsz)
+    # print('imgsz',imgsz)
     # Dataloader
     bs = 1  # batch_size
     if webcam:
@@ -171,7 +168,7 @@ def run(
             if webcam:  # batch_size >= 1
                 p, im0, frame = path[i], im0s[i].copy(), dataset.count
                 s += f'{i}: '
-                #print('s:',s)
+                # print('s:',s)
             else:
                 p, im0, frame = path, im0s.copy(), getattr(dataset, 'frame', 0)
 
@@ -179,34 +176,27 @@ def run(
             save_path = str(save_dir / p.name)  # im.jpg
             txt_path = str(save_dir / 'labels' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # im.txt
             s += '%gx%g ' % im.shape[2:]  # print string
-            #print('s:',s)
+            # print('s:',s)
             gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
             imc = im0.copy() if save_crop else im0  # for save_crop
             annotator = Annotator(im0, line_width=line_thickness, example=str(names))
-            #print('det',det)
-            #print("len(det)",len(det))
-            #print(det.shape)
+            # print('det',det)
+            # print("len(det)",len(det))
+            # print(det.shape)
             if len(det):
-                
+
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_boxes(im.shape[2:], det[:, :4], im0.shape).round()
-                
-                ppp=str(p)
-                print('ppp',ppp)
-                #ppp=ppp[-8:]
+
+                ppp = str(p)
                 ppp += '  '
 
-                
-                print('imagename',type(p))
                 # Print results
                 for c in det[:, 5].unique():
                     n = (det[:, 5] == c).sum()  # detections per class
-                    #print('n',n)
-                    #print('c',c)
+                    # print('n',n)
+                    # print('c',c)
                     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
-                    
-                    #print('s:',s)
-                    print('saris',names[int(c)])
                     ppp += names[int(c)]
                     ppp += '  '
                 ppp += '\n'
@@ -265,21 +255,21 @@ def run(
         # Print time (inference-only)
         LOGGER.info(f"{s}{'' if len(det) else '(no detections), '}{dt[1].dt * 1E3:.1f}ms")
         if len(det) == 0:
-            file = open(label_path,'a')
+            file = open(label_path, 'a')
             file.write(str(Path(p)))
             file.write('  ')
             file.write('others')
             file.write('\n')
             file.close()
-        #print('s',s)
-        #print('len(det)',len(det))
+        # print('s',s)
+        # print('len(det)',len(det))
 
     # Print results
     t = tuple(x.t / seen * 1E3 for x in dt)  # speeds per image
     LOGGER.info(f'Speed: %.1fms pre-process, %.1fms inference, %.1fms NMS per image at shape {(1, 3, *imgsz)}' % t)
     if save_txt or save_img:
         s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
-        #LOGGER.info(f"Results saved to {colorstr('bold', save_dir)}{s}")
+        # LOGGER.info(f"Results saved to {colorstr('bold', save_dir)}{s}")
     if update:
         strip_optimizer(weights[0])  # update model (to fix SourceChangeWarning)
 
@@ -321,16 +311,17 @@ def parse_opt(source):
 
 def main(opt):
     check_requirements(exclude=('tensorboard', 'thop'))
-    
-    
+
     run(**vars(opt))
+
 
 def get_single_img(pathhhh):
     current_path_album = os.path.dirname(__file__)
-    label_path_album = os.path.join(current_path_album,'..','..','..','resource','album',pathhhh)
+    label_path_album = os.path.join(current_path_album, '..', '..', '..', 'resource', 'album', pathhhh)
     main(parse_opt(label_path_album))
 
+
 if __name__ == "__main__":
-    #opt = parse_opt()
-    #main(opt)
+    # opt = parse_opt()
+    # main(opt)
     get_single_img('cat.png')

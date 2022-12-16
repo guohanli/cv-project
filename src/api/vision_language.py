@@ -1,6 +1,5 @@
 import json
 import os
-import time
 
 import clip
 import torch
@@ -30,7 +29,6 @@ def match(str1, sent):
 
 @vision_language_api.route('/search_img_by_text', methods=['POST'])
 def search_img_by_text():
-    a = time.time()
     sent = json.loads(request.data)
     current_path = os.path.dirname(__file__)
     path0 = os.path.join(current_path, '..', '..', 'resource', 'album')
@@ -41,16 +39,13 @@ def search_img_by_text():
         if filename.endswith('jpg') or filename.endswith('png'):
             #  存储图片的文件夹绝对路径
             str1 = os.path.join(path0, filename)
-            print(str1)
             similar_key.append(str1)
             sim = match(str1, sent)
             # 将得到的多张图片匹配你输入的图片关键词
             similar_value.append(sim)
     # 存放图片绝对路径和图文相似度的字典
     similar_dict = dict(zip(similar_key, similar_value))
-    print(similar_dict)
     similar_value.sort(reverse=True)
-    print(similar_value)
     result = ' '
     # 找到图文相似度最高的那个图片的绝对路径
     for key, value in similar_dict.items():
@@ -58,8 +53,6 @@ def search_img_by_text():
             result = key
             break
     url_list = img_path2url(result)
-    b = time.time()
-    print('time', b - a)
     return jsonify(url_list)
 
 
@@ -70,7 +63,7 @@ def calculate_similarity_scores(img_path_list, query_sentence):
     text = clip.tokenize([query_sentence] * (len(img_path_list))).to(device)
     with torch.no_grad():
         logits_per_image, logits_per_text = model(images, text)
-        similarity_scores = (logits_per_image.numpy()[:,0]).tolist()
+        similarity_scores = (logits_per_image.numpy()[:, 0]).tolist()
     return similarity_scores
 
 

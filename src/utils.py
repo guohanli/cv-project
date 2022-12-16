@@ -103,7 +103,6 @@ def get_people_img_path_list():
     label_path_data = os.path.join(current_path_data, 'model', 'image_classification', 'data.txt')
 
     count = len(open(label_path_data, 'r').readlines())
-    print('count', count)
 
     i = 1
     path_list = []
