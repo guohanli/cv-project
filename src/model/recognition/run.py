@@ -58,3 +58,6 @@ def handle_delete_people_img(img_path):
     people_data = list(filter(lambda x: x[0] != img_url, people_data))
     img_url_list, id_list = zip(*people_data)
     generate_people_json_file(img_url_list, id_list)
+
+
+generate_people_json()
