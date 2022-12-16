@@ -50,8 +50,8 @@ if __name__ == '__main__':
     MatchThreshold = 1  # 人脸特征向量匹配阈值设置
     #faces_emb, img = load_known_faces('E:/cv-project/resource/album/animate_pic/test.png', mtcnn, resnet)  # 待检测人物图
 
-    a=get_img_path_list_for_certain_category('people')
-    #a=get_people_img_path_list()#people list
+    #a=get_img_path_list_for_certain_category('people')
+    a=get_people_img_path_list()#people list
     known_faces_emb, _ = load_known_faces(a[0], mtcnn, resnet)  # 已知人物图
     c=1
     count=[1]
@@ -88,16 +88,14 @@ if __name__ == '__main__':
 
     #返回一个类别的所有图片
     list1=[]
-    for i in range(len(url_list)-1):
-        list1.append([])
 
-    for i in range(1,c):
-        url_path=get_peopleimg_path_list_for_certain_category(i)
-        for j in range (len(url_path)):
-            img_name=img_url2path(url_path[j])
-            name=img_path2name(img_name)
-            list1[i-1].append(url_path[j])
-            list1[i - 1].append(name)
+    i=1
+    url_path=get_peopleimg_path_list_for_certain_category(i)
+    for j in range (len(url_path)):
+        img_name=img_url2path(url_path[j])
+        name=img_path2name(img_name)
+        list1.append(url_path[j])
+        list1.append(name)
             #print(url_path,name)
     print(list1)
 
