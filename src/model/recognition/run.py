@@ -40,6 +40,7 @@ def handle_new_people_img(new_img_path):
     with open(people_json_path, 'r', encoding='utf8') as fp:
         people_data = json.load(fp)
     img_url_list, id_list = zip(*people_data)
+    img_url_list, id_list = list(img_url_list),list()
     # c是最新的类别id，在没有相似图片的情况下直接给新图片用
     c = len(set(id_list)) + 2
     # todo 王婧馨，将新图片和之前的图片比较，得到id，赋值给new_img_category

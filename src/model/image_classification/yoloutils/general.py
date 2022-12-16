@@ -363,6 +363,7 @@ def check_version(current='0.0.0', minimum='0.0.0', name='version ', pinned=Fals
 @TryExcept()
 def check_requirements(requirements=ROOT / 'requirements.txt', exclude=(), install=True, cmds=''):
     # Check installed dependencies meet YOLOv5 requirements (pass *.txt file or list of packages or single package str)
+    return
     prefix = colorstr('red', 'bold', 'requirements:')
     check_python()  # check python version
     if isinstance(requirements, Path):  # requirements.txt file
