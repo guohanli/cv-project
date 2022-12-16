@@ -89,17 +89,31 @@ def delete_img():
 @image_classification_api.route('/get_covers')
 def get_covers():
 
-    list = []
-    types = ['people','animal','fruit','bicycle']
+    lists = []
+    current_path_album = os.path.dirname(__file__)
+    data_txt_path = os.path.join(current_path_album,'..','model','image_classification','data.txt')
+    length = len(linecache.getlines)
+
+    j=1
+    types = []
+    while j<=length:
+        type = linecache.getline(data_txt_path,j)
+        type = type.split('  ')[1]
+        types.append(type)
+
+    types = list(set(types))
+
+    #types = ['people','animal','fruit','bicycle']
+    
     for i in types:
         print('i',i)
         covers = get_label_path(i)
-        if covers != None:
-            coverss = covers[0]
-            dict = {'img_path':utils.img_path2url(coverss),'category':i}
-            list.append(dict)
+        
+        coverss = covers[0]
+        dict = {'img_path':utils.img_path2url(coverss),'category':i}
+        lists.append(dict)
 
-    return jsonify(list)
+    return jsonify(lists)
     '''
     return jsonify([{'img_path': 'http://127.0.0.1:5000/jack.png', 'category': 'people'},
                     {'img_path': 'http://127.0.0.1:5000/cat.png', 'category': 'animal'}])
@@ -158,5 +172,5 @@ def get_category_imgs():
     '''
 
 if __name__ == '__main__':
-    list = get_face_path()
-    print(list)
+    lists = get_face_path()
+    print(lists)
