@@ -230,7 +230,7 @@ def run(
                         annotator.box_label(xyxy, label, color=colors(c, True))
                     if save_crop:
                         save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}.jpg', BGR=True)
-
+            '''
             # Stream results
             im0 = annotator.result()
             if view_img:
@@ -240,7 +240,7 @@ def run(
                     cv2.resizeWindow(str(p), im0.shape[1], im0.shape[0])
                 cv2.imshow(str(p), im0)
                 cv2.waitKey(1)  # 1 millisecond
-            '''
+            
             # Save results (image with detections)
             if save_img:
                 if dataset.mode == 'image':
@@ -264,6 +264,13 @@ def run(
             '''
         # Print time (inference-only)
         LOGGER.info(f"{s}{'' if len(det) else '(no detections), '}{dt[1].dt * 1E3:.1f}ms")
+        if len(det) == 0:
+            file = open(label_path,'a')
+            file.write(str(Path(p)))
+            file.write('  ')
+            file.write('others')
+            file.write('\n')
+            file.close()
         #print('s',s)
         #print('len(det)',len(det))
 
