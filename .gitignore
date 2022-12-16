@@ -1,6 +1,5 @@
-# saved model
-*.pt
-*.pth
+# Vscode config file
+.vscode
 # IDEA config file
 .idea
 # python cache file
