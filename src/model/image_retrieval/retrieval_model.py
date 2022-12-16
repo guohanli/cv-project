@@ -1,13 +1,14 @@
 import dataset
-
+import os
+from PIL import Image
 import torch
 from torch.utils.data import Dataset, DataLoader
 from torchvision import models
 
 
 def image_retrieval(base_path, query_path, base_batch_size):
-    base_dataset = dataset.MyData(base_path, 'train')
-    query_dataset = dataset.MyData(query_path, 'train')
+    base_dataset = dataset.MyData(base_path)
+    query_dataset = dataset.QueryData(query_path)
 
     base_loader = DataLoader(base_dataset, batch_size=base_batch_size, shuffle=False)
     query_loader = DataLoader(query_dataset, batch_size=1, shuffle=False)
@@ -62,10 +63,16 @@ def getTopKSimilarity(scores, K):
             break
 
 
-# if __name__ == '__main__':
-#     img_path = '/public/home/CS272/liuwen-cs272/image_retrieval/my_image_retrieval/images/'
-#     query_path = '/public/home/CS272/liuwen-cs272/image_retrieval/my_image_retrieval/images/query/'
-#     scores = image_retrieval(base_path=img_path, query_path=query_path, base_batch_size=10)
-#     img_name, max_score = getMaxSimilarity(scores)
-#     print(img_name, max_score)
+if __name__ == '__main__':
+    img_path = '/public/home/CS272/liuwen-cs272/image_retrieval/my_image_retrieval/images/'
+    # img_path = the folder path of base images.
+    query_path = '/public/home/CS272/liuwen-cs272/image_retrieval/my_image_retrieval/images/query/Tower07.jpeg'
+    # query_path = the path of query image, only 1 image.
+    
+    scores = image_retrieval(base_path=img_path, query_path=query_path, base_batch_size=10)
+    img_name, max_score = getMaxSimilarity(scores)
+    print(img_name, max_score)
+    img_item_path = os.path.join(img_path, img_name)
+    image = Image.open(img_item_path)
+    image.show()
     
