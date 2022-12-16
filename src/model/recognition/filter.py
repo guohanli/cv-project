@@ -40,7 +40,7 @@ def cartoon(fn_raw, edge='Canny'):
 if __name__ == '__main__':
     img_path = os.path.join(album_path, 'man1.png')
     animate_path = os.path.join(current_path, '..', 'resource')
-    save_path= os.path.join(animate_path, 'animate_pic','animate_man1.png')
+    save_path= os.path.join(animate_path, '../../../resource/album/animate_pic', 'animate_man1.png')
     #print(img_path)
     img = cv2.imread(img_path)
     #img=cv2.imread('E:/cv-project/resource/album/man1.png')

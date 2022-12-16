@@ -128,6 +128,9 @@ def img_path2url(img_path):
     img_name = os.path.basename(img_path)
     return url_prefix + img_name
 
+def animate_img_path2url(animate_img_path):
+    img_name = os.path.basename(animate_img_path)
+    return url_prefix + 'animate_pic/' + img_name
 
 def img_url2path(img_url):
     img_name = os.path.basename(img_url)

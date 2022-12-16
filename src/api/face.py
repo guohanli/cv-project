@@ -5,6 +5,7 @@ from flask import jsonify, request
 from model.recognition.filter import cartoon
 from utils import *
 
+current_path = os.path.dirname(__file__)
 face_api = Blueprint('face_api', __name__)
 
 
@@ -47,20 +48,11 @@ def get_animate():
     img_path = img_url2path(img_url)
     img_name = img_path2name(img_path)
     # todo 王婧馨，获取生成的动画图片的路径
-    img_path = os.path.join(album_path, 'man1.png')
-    animate_path = os.path.join(current_path, '..', 'resource')
-    save_path = os.path.join(animate_path, 'animate_pic', 'animate_man1.png')
-    print(img_path)
+    animate_path = os.path.join(album_path, 'animate_pic')
+    save_path = os.path.join(animate_path, 'animate_' + img_name)
     img = cv2.imread(img_path)
-    # img=cv2.imread('E:/cv-project/resource/album/man1.png')
-    # img = cv2.imread(img_path)
-    dst_color = cartoon(img)
-    imgnew = cv2.flip(dst_color, 1)
-    # dst_color=old_pic(img)
-    # cv2.imshow('img_color', dst_color)
-    # cv2.waitKey()
-    cv2.imwrite(save_path, imgnew)
-    img_animate_path = save_path
-    img_animate_name = img_path2name(img_animate_path)
-    img_animate_url = img_path2url(img_animate_path)
-    return jsonify({'src': img_animate_url, 'id': img_animate_name})
+    cartoon_img = cartoon(img)
+    cv2.imwrite(save_path, cartoon_img)
+    animate_img_name = img_path2name(save_path)
+    animate_img_url = animate_img_path2url(save_path)
+    return jsonify({'src': animate_img_url, 'id': animate_img_name})
