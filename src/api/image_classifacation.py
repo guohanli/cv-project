@@ -55,6 +55,10 @@ def new_image():
 @image_classification_api.route('/delete_image',methods=['POST'])
 def delete_img():
     name = json.loads(request.data)
+
+    delete_path = utils.img_name2path(name)
+    utils.delete_image_file(delete_path)
+
     current_path_album = os.path.dirname(__file__)
     data_txt_path = os.path.join(current_path_album,'..','model','image_classification','data.txt')
 
@@ -76,6 +80,7 @@ def delete_img():
     filenew = open(data_txt_path,'w')
     filenew.writelines(lines)
     filenew.close()
+    return ""
     
 
 
