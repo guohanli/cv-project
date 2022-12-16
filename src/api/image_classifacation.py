@@ -51,11 +51,11 @@ def new_image():
     file_name = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time())) + '.jpeg'
     file_save_path = os.path.join(utils.album_path, file_name)
     file.save(file_save_path)
+    print("Save new image to", file_save_path)
     get_single_img(file_name)
-
+    print("Update data.txt for new image")
     current_path_album = os.path.dirname(__file__)
     data_txt_path = os.path.join(current_path_album, '..', 'model', 'image_classification', 'data.txt')
-    # file = open(data_txt_path,'r')
     length = len(linecache.getlines(data_txt_path))
     new_path = linecache.getline(data_txt_path, length)
     lllabel = new_path.split('  ')[1]
@@ -72,7 +72,7 @@ def delete_img():
 
     delete_path = utils.img_name2path(name)
     utils.delete_image_file(delete_path)
-
+    print("Delete image", delete_path)
     current_path_album = os.path.dirname(__file__)
     data_txt_path = os.path.join(current_path_album, '..', 'model', 'image_classification', 'data.txt')
 
@@ -95,6 +95,7 @@ def delete_img():
     filenew.writelines(lines)
     filenew.close()
     linecache.clearcache()
+    print("Remove deleted image from data.txt")
 
     # todo 邱佳存
     lllable = None
@@ -108,31 +109,22 @@ def get_covers():
     lists = []
     current_path_album = os.path.dirname(__file__)
     data_txt_path = os.path.join(current_path_album, '..', 'model', 'image_classification', 'data.txt')
-    # file = open(data_txt_path,'r')
     length = len(linecache.getlines(data_txt_path))
-    # length = len(file.readlines())
 
     j = 1
     types = []
     while j <= length:
         type = linecache.getline(data_txt_path, j)
-
-        # type = file.readline(j)
         type = type.split('  ')[1]
         types.append(type)
         j = j + 1
 
     types = list(set(types))
-
-    # types = ['people','animal','fruit','bicycle']
-
     for i in types:
         covers = get_label_path(i)
-
         coverss = covers[0]
-        dict = {'img_path': utils.img_path2url(coverss), 'category': i}
-        lists.append(dict)
-    # file.close()
+        d = {'img_path': utils.img_path2url(coverss), 'category': i}
+        lists.append(d)
     linecache.clearcache()
     return jsonify(lists)
     '''
