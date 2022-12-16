@@ -61,6 +61,6 @@ def get_animate():
     # cv2.waitKey()
     cv2.imwrite(save_path, imgnew)
     img_animate_path = save_path
-    img_animate_name = img_name2path(img_animate_path)
+    img_animate_name = img_path2name(img_animate_path)
     img_animate_url = img_path2url(img_animate_path)
     return jsonify({'src': img_animate_url, 'id': img_animate_name})

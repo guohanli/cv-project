@@ -41,7 +41,7 @@ if __name__ == '__main__':
     img_path = os.path.join(album_path, 'man1.png')
     animate_path = os.path.join(current_path, '..', 'resource')
     save_path= os.path.join(animate_path, 'animate_pic','animate_man1.png')
-    print(img_path)
+    #print(img_path)
     img = cv2.imread(img_path)
     #img=cv2.imread('E:/cv-project/resource/album/man1.png')
     #img = cv2.imread(img_path)
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     # cv2.waitKey()
     cv2.imwrite(save_path,imgnew)
     img_animate_path = save_path
-    img_animate_name = img_name2path(img_animate_path)
+    img_animate_name = img_path2name(img_animate_path)
 
     img_animate_url = img_path2url(img_animate_path)
-    print(img_animate_url)
+    print(img_animate_url,img_animate_name)
