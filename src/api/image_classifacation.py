@@ -9,6 +9,7 @@ import sys
 sys.path.append("..")
 
 from model.image_classification.detectmy_singleimg import get_single_img
+import model.image_classification.detectmy
 import linecache
 import os
 
