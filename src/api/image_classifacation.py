@@ -52,7 +52,15 @@ def new_image():
     file_save_path = os.path.join(utils.album_path, file_name)
     file.save(file_save_path)
     get_single_img(file_name)
-    return ''
+
+    current_path_album = os.path.dirname(__file__)
+    data_txt_path = os.path.join(current_path_album,'..','model','image_classification','data.txt')
+    #file = open(data_txt_path,'r')
+    length = len(linecache.getlines(data_txt_path))
+    new_path = linecache.getline(data_txt_path,length)
+    lllabel = new_path.split('  ')[1]
+    linecache.clearcache()
+    return lllabel
 
 @image_classification_api.route('/delete_image',methods=['POST'])
 def delete_img():

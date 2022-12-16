@@ -2,4 +2,4 @@ D:\pycharm project\009demo\cv-project\resource\album\20221216002547.jpeg  people
 D:\pycharm project\009demo\cv-project\resource\album\cat.png  animal  
 D:\pycharm project\009demo\cv-project\resource\album\dog.jpeg  animal  
 D:\pycharm project\009demo\cv-project\resource\album\jack.png  people  
-D:\pycharm project\009demo\cv-project\resource\album\20221216213547.jpeg  bicycle  
+D:\pycharm project\009demo\cv-project\resource\album\20221216220251.jpeg  bicycle  

@@ -1,12 +1,11 @@
 import io
 import json
 import os
-
+import linecache
 import torch
 from PIL import Image
 from torchvision.transforms import transforms
 
-from api.image_classifacation import get_face_path
 
 """
 Some concepts.
@@ -79,8 +78,25 @@ def get_img_path_list_for_certain_category(target_category):
 
 
 def get_people_img_path_list():
-    list = get_face_path()
-    return (list)
+    category = 'people'
+    current_path_data = os.path.dirname(__file__)   
+    current_path_data = os.path.join(current_path_data,'..')
+    label_path_data = os.path.join(current_path_data,'model','image_classification','data.txt')
+
+    count=len(open(label_path_data,'r').readlines())
+    print('count',count)
+
+    i=1
+    path_list = []
+    while i<=count:
+        text = linecache.getline(label_path_data,i)
+        if_category_in = category in text
+        if if_category_in:
+            text1 = text.split('  ')[0]
+            path_list.append(text1)
+        i += 1
+    linecache.clearcache()
+    return (path_list)
 
 
 def img_path2url(img_path):
