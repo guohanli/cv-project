@@ -30,7 +30,7 @@ def match_faces(faces_emb, known_faces_emb, threshold):
     #print("\n两张人脸的欧式距离为：%.2f" % distance)
     if (distance < threshold):
         isExistDst = True
-    return isExistDst
+    return isExistDst,distance
 
 
 
@@ -47,25 +47,30 @@ if __name__ == '__main__':
 
     # InceptionResnetV1模型加载【用于获取人脸特征向量】
     resnet = InceptionResnetV1(pretrained='vggface2').eval().to(device)
-    MatchThreshold = 1  # 人脸特征向量匹配阈值设置
+    MatchThreshold = 1.0  # 人脸特征向量匹配阈值设置
     #faces_emb, img = load_known_faces('E:/cv-project/resource/album/animate_pic/test.png', mtcnn, resnet)  # 待检测人物图
 
     #a=get_img_path_list_for_certain_category('people')
     a=get_people_img_path_list()#people list
     lable=1
     count=[1]
-    for i in range(len(a)-1):
-        known_faces_emb, _ = load_known_faces(a[i+1], mtcnn, resnet)  # 已知人物图
-        for j in range(i+1):
-            faces_emb, img = load_known_faces(a[j], mtcnn, resnet)#待测任务图
-            isExistDst = match_faces(faces_emb, known_faces_emb, MatchThreshold)  # 人脸匹配
+    for i in range(1,len(a)):
+        known_faces_emb, _ = load_known_faces(a[i], mtcnn, resnet)  # 新进图
+        flag=True
+        for j in range(i):
+            faces_emb, img = load_known_faces(a[j], mtcnn, resnet)#之前
+            isExistDst,distance = match_faces(faces_emb, known_faces_emb, MatchThreshold)  # 人脸匹配
+            print(i,j,isExistDst,distance)
             if isExistDst:
                 count.append(count[j])
-            else:
-                continue
-        lable=lable+1
-        count.append(lable)#总类别是lable-1
-    #print(count)
+                print(count)
+                flag=False
+                break
+        if flag:
+            lable = lable + 1
+            print(lable)
+            count.append(lable)#总类别是lable-1
+            print(count)
     #count.pop()
     name=img_path_list_people_name_list(a)
     url_list = img_path_list2url_list(name)#'http://127.0.0.1:5000/angelababy1.png'
@@ -74,7 +79,8 @@ if __name__ == '__main__':
     with open(people_json_path, 'r', encoding='utf8') as fp:
         people_data = json.load(fp)
     img_path_list, id_list = zip(*people_data)
-    c = len(set(id_list)) + 1#图片总数
+    all_id_type = set(id_list)
+    #c = len(set(id_list)) + 1#图片总数
 
     # 返回一个类别的一张图片和id以及count
     # for i in range(1, c):
@@ -93,20 +99,27 @@ if __name__ == '__main__':
         people_data = json.load(fp)
     img_path_list, id_list = zip(*people_data)
     all_id_type = set(id_list)
-    print(len(all_id_type))
-    c = len(set(id_list)) + 1
+    #print(len(all_id_type))
+    #c = len(set(id_list)) + 1
     # 返回一个类别的一张图片和id以及count
-    for k in range(len(all_id_type)):
-        result_list = []
-        for j in range(len(all_id_type)):
-            result_list.append([])
+    i=0
+    result_list = []
+    for k in range(len(list(all_id_type))):#
+        result_list.append ([])
+    #     #result_list.append([])
+    #     for j in range(2):
+    #         result_list[k].append([])
 
-        for i in range(1, len(all_id_type)+1):
-            url_path = get_peopleimg_path_list_for_certain_category(list(all_id_type)[i-1])
-            result_list[list(all_id_type)[i-1]- 1].append(url_path[0])
-            result_list[list(all_id_type)[i-1]- 1].append(i)
-            result_list[list(all_id_type)[i-1]- 1].append(len(get_peopleimg_path_list_for_certain_category(i)))
-        result_list = list(map(lambda x: {'src': x[0], 'face_category_id': x[1], 'count': str(x[2])}, result_list))
+    for id in all_id_type:
+        url_path = get_peopleimg_path_list_for_certain_category(id)
+        result_list[i].append(url_path[0])
+        result_list[i].append(id)
+        result_list[i].append(get_count_by_people_id(id, people_data))
+        i=i+1
+        if i==len(list(all_id_type)):
+            break
+    result_list = list(map(lambda x: {'src': x[0], 'face_category_id': x[1], 'count': str(x[2])}, result_list))
+
     print('第一个api')
     print(result_list)
 
@@ -114,38 +127,38 @@ if __name__ == '__main__':
 
 
 
-    #返回一个类别的所有图片
-
-    face_category_id=1
-    result = list(
-        map(lambda x: {'src': x[0], 'id': img_url2name(x[0])}, filter(lambda x: x[1] == face_category_id, people_data)))
-    print(result)
-
-    # todo 王婧馨，将新图片和之前的图片比较，得到id，赋值给new_img_category
-    new_img_path='E:/cv-project/resource/img.png'
-    with open(people_json_path, 'r', encoding='utf8') as fp:
-        people_data = json.load(fp)
-    img_url_list, id_list = zip(*people_data)
-    img_url_list, id_list = list(img_url_list), list(id_list)
-    #img_path = img_url2path(img_url_list)
-    # c是最新的类别id，在没有相似图片的情况下直接给新图片用
-    c = len(set(id_list)) + 1#+2
-    ##add
-    for i in range(len(img_url_list)):
-        known_faces_emb, _ = load_known_faces(img_url2path(img_url_list[i]), mtcnn, resnet)  # 已知人物图
-        faces_emb, img = load_known_faces(new_img_path, mtcnn, resnet)  # 待测任务图
-        isExistDst = match_faces(faces_emb, known_faces_emb, MatchThreshold)  # 人脸匹配
-        if isExistDst:
-            id_list.append(id_list[i])
-        else:
-            continue
-    id_list.append(c)
-    # pass
-    new_img_category = id_list[-1]
-    new_img_url = img_path2url(new_img_path)
-    img_url_list.insert(0, new_img_url)
-    id_list.insert(0, new_img_category)
-    print(new_img_category,new_img_url)
+    # #返回一个类别的所有图片
+    #
+    # face_category_id=1
+    # result = list(
+    #     map(lambda x: {'src': x[0], 'id': img_url2name(x[0])}, filter(lambda x: x[1] == face_category_id, people_data)))
+    # print(result)
+    #
+    # # todo 王婧馨，将新图片和之前的图片比较，得到id，赋值给new_img_category
+    # new_img_path='E:/cv-project/resource/img.png'
+    # with open(people_json_path, 'r', encoding='utf8') as fp:
+    #     people_data = json.load(fp)
+    # img_url_list, id_list = zip(*people_data)
+    # img_url_list, id_list = list(img_url_list), list(id_list)
+    # #img_path = img_url2path(img_url_list)
+    # # c是最新的类别id，在没有相似图片的情况下直接给新图片用
+    # c = len(set(id_list)) + 1#+2
+    # ##add
+    # for i in range(len(img_url_list)):
+    #     known_faces_emb, _ = load_known_faces(img_url2path(img_url_list[i]), mtcnn, resnet)  # 已知人物图
+    #     faces_emb, img = load_known_faces(new_img_path, mtcnn, resnet)  # 待测任务图
+    #     isExistDst = match_faces(faces_emb, known_faces_emb, MatchThreshold)  # 人脸匹配
+    #     if isExistDst:
+    #         id_list.append(id_list[i])
+    #     else:
+    #         continue
+    # id_list.append(c)
+    # # pass
+    # new_img_category = id_list[-1]
+    # new_img_url = img_path2url(new_img_path)
+    # img_url_list.insert(0, new_img_url)
+    # id_list.insert(0, new_img_category)
+    # print(new_img_category,new_img_url)
 
 
 

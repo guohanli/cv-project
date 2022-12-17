@@ -17,17 +17,20 @@ def get_face_covers():
     all_id_type = set(id_list)
     #c = len(set(id_list)) + 1
     # 返回一个类别的一张图片和id以及count
-    for k in range(len(all_id_type)):
-        result_list = []
-        for j in range(len(all_id_type)):
-            result_list.append([])
+    i = 0
+    result_list = []
+    for k in range(len(list(all_id_type))):  #
+        result_list.append([])
 
-        for i in range(1, len(all_id_type) + 1):
-            url_path = get_peopleimg_path_list_for_certain_category(list(all_id_type)[i - 1])
-            result_list[list(all_id_type)[i - 1] - 1].append(url_path[0])
-            result_list[list(all_id_type)[i - 1] - 1].append(i)
-            result_list[list(all_id_type)[i - 1] - 1].append(len(get_peopleimg_path_list_for_certain_category(i)))
-        result_list = list(map(lambda x: {'src': x[0], 'face_category_id': str(x[1]), 'count': str(x[2])}, result_list))
+    for id in all_id_type:
+        url_path = get_peopleimg_path_list_for_certain_category(id)
+        result_list[i].append(url_path[0])
+        result_list[i].append(id)
+        result_list[i].append(get_count_by_people_id(id, people_data))
+        i = i + 1
+        if i == len(list(all_id_type)):
+            break
+    result_list = list(map(lambda x: {'src': x[0], 'face_category_id': x[1], 'count': str(x[2])}, result_list))
     return jsonify(result_list)
 
 

@@ -15,20 +15,26 @@ def generate_people_json():
     resnet = InceptionResnetV1(pretrained='vggface2').eval().to(device)
     MatchThreshold = 1  # 人脸特征向量匹配阈值设置
     a = get_people_img_path_list()  # people list
-    known_faces_emb, _ = load_known_faces(a[0], mtcnn, resnet)  # 已知人物图
-    label = 1
+    #known_faces_emb, _ = load_known_faces(a[0], mtcnn, resnet)  # 已知人物图
+    lable = 1
     count = [1]
-    for i in range(len(a) - 1):
-        known_faces_emb, _ = load_known_faces(a[i + 1], mtcnn, resnet)  # 已知人物图
-        for j in range(i + 1):
-            faces_emb, img = load_known_faces(a[j], mtcnn, resnet)  # 待测任务图
-            isExistDst = match_faces(faces_emb, known_faces_emb, MatchThreshold)  # 人脸匹配
+    for i in range(1, len(a)):
+        known_faces_emb, _ = load_known_faces(a[i], mtcnn, resnet)  # 新进图
+        flag = True
+        for j in range(i):
+            faces_emb, img = load_known_faces(a[j], mtcnn, resnet)  # 之前
+            isExistDst, distance = match_faces(faces_emb, known_faces_emb, MatchThreshold)  # 人脸匹配
+            #print(i, j, isExistDst, distance)
             if isExistDst:
                 count.append(count[j])
-            else:
-                continue
-        label = label + 1
-        count.append(label)  # 总类别是c-1
+                #print(count)
+                flag = False
+                break
+        if flag:
+            lable = lable + 1
+            #print(lable)
+            count.append(lable)  # 总类别是lable-1
+            #print(count)
     # count.pop()
     name = img_path_list_people_name_list(a)
     url_list = img_path_list2url_list(name)  # 'http://127.0.0.1:5000/angelababy1.png'
