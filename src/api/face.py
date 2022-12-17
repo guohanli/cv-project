@@ -17,12 +17,12 @@ def get_face_covers():
     all_id_type = set(id_list)
     #c = len(set(id_list)) + 1
     # 返回一个类别的一张图片和id以及count
-    for i in range(1, len(all_id_type)):
+    for k in range(len(all_id_type)):
         result_list = []
-        for i in range(len(all_id_type) - 1):
+        for j in range(len(all_id_type)):
             result_list.append([])
 
-        for i in range(1, len(all_id_type)):
+        for i in range(1, len(all_id_type) + 1):
             url_path = get_peopleimg_path_list_for_certain_category(list(all_id_type)[i - 1])
             result_list[list(all_id_type)[i - 1] - 1].append(url_path[0])
             result_list[list(all_id_type)[i - 1] - 1].append(i)
