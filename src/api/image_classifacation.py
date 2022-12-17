@@ -85,6 +85,7 @@ def delete_img():
         text = linecache.getline(data_txt_path, i)
 
         if name in text:
+            llabel = lines[i - 1]
             del lines[i - 1]
             break
 
@@ -98,8 +99,8 @@ def delete_img():
     print("Remove deleted image from data.txt")
 
     # todo 邱佳存
-    lllable = None
-    if lllable == 'people':
+    lllabel = llabel.split('  ')[1]
+    if lllabel == 'people':
         handle_delete_people_img(delete_path)
     return ""
 
