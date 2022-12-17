@@ -15,18 +15,18 @@ def get_face_covers():
         people_data = json.load(fp)
     img_path_list, id_list = zip(*people_data)
     all_id_type = set(id_list)
-    c = len(set(id_list)) + 1
+    #c = len(set(id_list)) + 1
     # 返回一个类别的一张图片和id以及count
-    for i in range(1, c):
+    for i in range(1, len(all_id_type)):
         result_list = []
-        for i in range(c - 1):
+        for i in range(len(all_id_type) - 1):
             result_list.append([])
 
-        for i in range(1, c):
-            url_path = get_peopleimg_path_list_for_certain_category(i)
-            result_list[i - 1].append(url_path[0])
-            result_list[i - 1].append(i)
-            result_list[i - 1].append(len(get_peopleimg_path_list_for_certain_category(i)))
+        for i in range(1, len(all_id_type)):
+            url_path = get_peopleimg_path_list_for_certain_category(list(all_id_type)[i - 1])
+            result_list[list(all_id_type)[i - 1] - 1].append(url_path[0])
+            result_list[list(all_id_type)[i - 1] - 1].append(i)
+            result_list[list(all_id_type)[i - 1] - 1].append(len(get_peopleimg_path_list_for_certain_category(i)))
         result_list = list(map(lambda x: {'src': x[0], 'face_category_id': x[1], 'count': str(x[2])}, result_list))
     return jsonify(result_list)
 

@@ -65,7 +65,7 @@ if __name__ == '__main__':
                 continue
         lable=lable+1
         count.append(lable)#总类别是lable-1
-    print(count)
+    #print(count)
     #count.pop()
     name=img_path_list_people_name_list(a)
     url_list = img_path_list2url_list(name)#'http://127.0.0.1:5000/angelababy1.png'
@@ -77,18 +77,40 @@ if __name__ == '__main__':
     c = len(set(id_list)) + 1#图片总数
 
     # 返回一个类别的一张图片和id以及count
-    for i in range(1, c):
+    # for i in range(1, c):
+    #     result_list = []
+    #     for i in range(c - 1):
+    #         result_list.append([])
+    #
+    #     for i in range(1, c):
+    #         url_path = get_peopleimg_path_list_for_certain_category(i)
+    #         result_list[i - 1].append(url_path[0])
+    #         result_list[i - 1].append(i)
+    #         result_list[i - 1].append(len(get_peopleimg_path_list_for_certain_category(i)))
+    #     result_list = list(map(lambda x: {'src': x[0], 'face_category_id': x[1], 'count': str(x[2])}, result_list))
+    # print(result_list)
+    with open(people_json_path, 'r', encoding='utf8') as fp:
+        people_data = json.load(fp)
+    img_path_list, id_list = zip(*people_data)
+    all_id_type = set(id_list)
+    c = len(set(id_list)) + 1
+    # 返回一个类别的一张图片和id以及count
+    for i in range(1, len(all_id_type)):
         result_list = []
-        for i in range(c - 1):
+        for i in range(len(all_id_type) - 1):
             result_list.append([])
 
-        for i in range(1, c):
-            url_path = get_peopleimg_path_list_for_certain_category(i)
-            result_list[i - 1].append(url_path[0])
-            result_list[i - 1].append(i)
-            result_list[i - 1].append(len(get_peopleimg_path_list_for_certain_category(i)))
+        for i in range(1, len(all_id_type)):
+            url_path = get_peopleimg_path_list_for_certain_category(list(all_id_type)[i-1])
+            result_list[list(all_id_type)[i-1]- 1].append(url_path[0])
+            result_list[list(all_id_type)[i-1]- 1].append(i)
+            result_list[list(all_id_type)[i-1]- 1].append(len(get_peopleimg_path_list_for_certain_category(i)))
         result_list = list(map(lambda x: {'src': x[0], 'face_category_id': x[1], 'count': str(x[2])}, result_list))
+    print('第一个api')
     print(result_list)
+
+
+
 
 
     #返回一个类别的所有图片
@@ -104,7 +126,6 @@ if __name__ == '__main__':
         people_data = json.load(fp)
     img_url_list, id_list = zip(*people_data)
     img_url_list, id_list = list(img_url_list), list(id_list)
-
     #img_path = img_url2path(img_url_list)
     # c是最新的类别id，在没有相似图片的情况下直接给新图片用
     c = len(set(id_list)) + 1#+2
