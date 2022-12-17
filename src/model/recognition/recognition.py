@@ -75,6 +75,7 @@ if __name__ == '__main__':
         people_data = json.load(fp)
     img_path_list, id_list = zip(*people_data)
     c = len(set(id_list)) + 1#图片总数
+
     # 返回一个类别的一张图片和id以及count
     for i in range(1, c):
         result_list = []
@@ -99,18 +100,31 @@ if __name__ == '__main__':
 
     # todo 王婧馨，将新图片和之前的图片比较，得到id，赋值给new_img_category
     new_img_path='E:/cv-project/resource/img.png'
-    for i in range(len(a)):
-        known_faces_emb, _ = load_known_faces(a[i], mtcnn, resnet)  # 已知人物图
-        faces_emb, img = load_known_faces(new_img_path, mtcnn, resnet)#待测任务图
+    with open(people_json_path, 'r', encoding='utf8') as fp:
+        people_data = json.load(fp)
+    img_url_list, id_list = zip(*people_data)
+    img_url_list, id_list = list(img_url_list), list(id_list)
+
+    #img_path = img_url2path(img_url_list)
+    # c是最新的类别id，在没有相似图片的情况下直接给新图片用
+    c = len(set(id_list)) + 1#+2
+    ##add
+    for i in range(len(img_url_list)):
+        known_faces_emb, _ = load_known_faces(img_url2path(img_url_list[i]), mtcnn, resnet)  # 已知人物图
+        faces_emb, img = load_known_faces(new_img_path, mtcnn, resnet)  # 待测任务图
         isExistDst = match_faces(faces_emb, known_faces_emb, MatchThreshold)  # 人脸匹配
         if isExistDst:
-            count.append(count[i])
+            id_list.append(id_list[i])
         else:
             continue
-    lable=lable+1
-    count.append(lable)
-    url_path=new_img_url = img_path2url(new_img_path)
-    print(count[-1],url_path)
+    id_list.append(c)
+    # pass
+    new_img_category = id_list[-1]
+    new_img_url = img_path2url(new_img_path)
+    img_url_list.insert(0, new_img_url)
+    id_list.insert(0, new_img_category)
+    print(new_img_category,new_img_url)
+
 
 
 
