@@ -100,10 +100,11 @@ def delete_img():
 
     # todo 邱佳存
     lllabel = llabel.split('  ')[1]
+    result_str = ""
     if lllabel == 'people':
-        handle_delete_people_img(delete_path)
+        result_str = handle_delete_people_img(delete_path)
         print("Remove deleted image from people.json")
-    return ""
+    return result_str
 
 
 @image_classification_api.route('/get_covers')

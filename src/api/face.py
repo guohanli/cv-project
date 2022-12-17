@@ -27,7 +27,7 @@ def get_face_covers():
             result_list[list(all_id_type)[i - 1] - 1].append(url_path[0])
             result_list[list(all_id_type)[i - 1] - 1].append(i)
             result_list[list(all_id_type)[i - 1] - 1].append(len(get_peopleimg_path_list_for_certain_category(i)))
-        result_list = list(map(lambda x: {'src': x[0], 'face_category_id': x[1], 'count': str(x[2])}, result_list))
+        result_list = list(map(lambda x: {'src': x[0], 'face_category_id': str(x[1]), 'count': str(x[2])}, result_list))
     return jsonify(result_list)
 
 
