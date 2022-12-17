@@ -56,13 +56,13 @@ def new_image():
     print("Update data.txt for new image")
     current_path_album = os.path.dirname(__file__)
     data_txt_path = os.path.join(current_path_album, '..', 'model', 'image_classification', 'data.txt')
-    length = len(linecache.getlines(data_txt_path))
-    new_path = linecache.getline(data_txt_path, length)
+    new_path = linecache.getline(data_txt_path, 1)
     lllabel = new_path.split('  ')[1]
     linecache.clearcache()
 
     if lllabel == 'people':
         handle_new_people_img(file_save_path)
+        print("Update people.json for new image")
     return lllabel
 
 
@@ -102,6 +102,7 @@ def delete_img():
     lllabel = llabel.split('  ')[1]
     if lllabel == 'people':
         handle_delete_people_img(delete_path)
+        print("Remove deleted image from people.json")
     return ""
 
 
