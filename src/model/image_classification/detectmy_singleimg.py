@@ -269,6 +269,7 @@ def run(
             file.write(str(Path(p)))
             file.write('  ')
             file.write('others')
+            file.write('  ')
             file.write('\n')
             file.close()
         #print('s',s)
