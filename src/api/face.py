@@ -14,6 +14,7 @@ def get_face_covers():
     with open(people_json_path, 'r', encoding='utf8') as fp:
         people_data = json.load(fp)
     img_path_list, id_list = zip(*people_data)
+    all_id_type = set(id_list)
     c = len(set(id_list)) + 1
     # 返回一个类别的一张图片和id以及count
     for i in range(1, c):
