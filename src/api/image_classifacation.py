@@ -80,8 +80,8 @@ def delete_img():
     lines = file.readlines()
     length = len(lines)
 
-    i = 0
-    while i < length:
+    i = 1
+    while i <= length:
         text = linecache.getline(data_txt_path, i)
 
         if name in text:
