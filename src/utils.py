@@ -163,10 +163,8 @@ def transform_image_path_list2tensor(img_path_list, custom_transforms=None):
 def delete_image_file(img_path):
     os.remove(img_path)
 
-def get_count_by_people_id(id):
-    with open(people_json_path, 'r', encoding='utf8') as fp:
-        people_data = json.load(fp)
 
+def get_count_by_people_id(id, people_data):
     img_line = list(filter(lambda x: x[1] == id, people_data))
     if len(img_line) == 0:
         return 0
@@ -175,6 +173,3 @@ def get_count_by_people_id(id):
     category_count = len(list(filter(lambda x: x[1] == img_category_id, people_data)))
     return category_count
 
-
-if __name__ == '__main__':
-    print(get_count_by_people_id(2))
