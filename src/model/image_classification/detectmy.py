@@ -102,7 +102,6 @@ def run(
     ####################################################
     # Directories
     save_dir = Path(project)# increment run
-    print('save_dir',save_dir)
     (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
     
     # Load model
@@ -193,22 +192,17 @@ def run(
                 
                 file = open(label_path, mode = 'a')
                 ppp=str(p)
-                print('ppp',ppp)
-                #ppp=ppp[-8:]
                 file.write(ppp)
                 file.write('  ')
                 file.close()
-                
-                print('imagename',type(p))
+
                 # Print results
                 for c in det[:, 5].unique():
                     n = (det[:, 5] == c).sum()  # detections per class
                     #print('n',n)
                     #print('c',c)
                     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
-                    
-                    #print('s:',s)
-                    print('saris',names[int(c)])
+
                     file = open(label_path, mode = 'a')
                     file.write(names[int(c)])
                     file.write('  ')
