@@ -52,8 +52,7 @@ if __name__ == '__main__':
 
     #a=get_img_path_list_for_certain_category('people')
     a=get_people_img_path_list()#people list
-    known_faces_emb, _ = load_known_faces(a[0], mtcnn, resnet)  # 已知人物图
-    c=1
+    lable=1
     count=[1]
     for i in range(len(a)-1):
         known_faces_emb, _ = load_known_faces(a[i+1], mtcnn, resnet)  # 已知人物图
@@ -64,44 +63,54 @@ if __name__ == '__main__':
                 count.append(count[j])
             else:
                 continue
-        c=c+1
-        count.append(c)#总类别是c-1
-    count.pop()
+        lable=lable+1
+        count.append(lable)#总类别是lable-1
+    print(count)
+    #count.pop()
     name=img_path_list_people_name_list(a)
     url_list = img_path_list2url_list(name)#'http://127.0.0.1:5000/angelababy1.png'
     #创建一个只有people的json文件
     people=generate_people_json_file(url_list,count)
     with open(people_json_path, 'r', encoding='utf8') as fp:
         people_data = json.load(fp)
-    #返回一个类别的一张图片和id以及count
-    list=[]
-    for i in range (c-1):
-        list.append([])
+    img_path_list, id_list = zip(*people_data)
+    c = len(set(id_list)) + 1#图片总数
+    # 返回一个类别的一张图片和id以及count
+    for i in range(1, c):
+        result_list = []
+        for i in range(c - 1):
+            result_list.append([])
 
-    for i in range(1,c):
-        url_path=get_peopleimg_path_list_for_certain_category(i)
-        list[i-1].append(url_path[0])
-        list[i-1].append(i)
-        list[i-1].append(len(get_peopleimg_path_list_for_certain_category(i)))
-        #print(url_path[0],i,len(get_peopleimg_path_list_for_certain_category(i)))
-    print(list)
+        for i in range(1, c):
+            url_path = get_peopleimg_path_list_for_certain_category(i)
+            result_list[i - 1].append(url_path[0])
+            result_list[i - 1].append(i)
+            result_list[i - 1].append(len(get_peopleimg_path_list_for_certain_category(i)))
+        result_list = list(map(lambda x: {'src': x[0], 'face_category_id': x[1], 'count': str(x[2])}, result_list))
+    print(result_list)
+
 
     #返回一个类别的所有图片
-    list1=[]
 
-    i=1
-    url_path=get_peopleimg_path_list_for_certain_category(i)
-    for j in range (len(url_path)):
-        img_name=img_url2path(url_path[j])
-        name=img_path2name(img_name)
-        list1.append(url_path[j])
-        list1.append(name)
-            #print(url_path,name)
-    print(list1)
+    face_category_id=1
+    result = list(
+        map(lambda x: {'src': x[0], 'id': img_url2name(x[0])}, filter(lambda x: x[1] == face_category_id, people_data)))
+    print(result)
 
-
-
-
+    # todo 王婧馨，将新图片和之前的图片比较，得到id，赋值给new_img_category
+    new_img_path='E:/cv-project/resource/img.png'
+    for i in range(len(a)):
+        known_faces_emb, _ = load_known_faces(a[i], mtcnn, resnet)  # 已知人物图
+        faces_emb, img = load_known_faces(new_img_path, mtcnn, resnet)#待测任务图
+        isExistDst = match_faces(faces_emb, known_faces_emb, MatchThreshold)  # 人脸匹配
+        if isExistDst:
+            count.append(count[i])
+        else:
+            continue
+    lable=lable+1
+    count.append(lable)
+    url_path=new_img_url = img_path2url(new_img_path)
+    print(count[-1],url_path)
 
 
 
