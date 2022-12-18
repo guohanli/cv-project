@@ -32,10 +32,9 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 def get_img_name_list():
     img_name_list = []
-    for root, dirs, files in os.walk(album_path):
-        for file in files:
-            if file.endswith("png") or file.endswith("jpg") or file.endswith("jpeg"):
-                img_name_list.append(file)
+    for file in os.listdir(album_path):
+        if file.endswith("png") or file.endswith("jpg") or file.endswith("jpeg"):
+            img_name_list.append(file)
 
     return img_name_list
 
@@ -172,4 +171,9 @@ def get_count_by_people_id(id, people_data):
     img_category_id = img_line[1]
     category_count = len(list(filter(lambda x: x[1] == img_category_id, people_data)))
     return category_count
+
+
+if __name__ == '__main__':
+    l = get_img_name_list()
+    print(l)
 
