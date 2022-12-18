@@ -39,8 +39,8 @@ class QueryData(Dataset):
 
     def __getitem__(self, idx):
         tf = transforms.Compose([
-            transforms.Resize([640, 640]),
-            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.Resize([224, 224]),
+            # transforms.RandomHorizontalFlip(p=0.5),
             transforms.ToTensor(),
             transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
         ])

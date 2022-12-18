@@ -28,10 +28,11 @@ def search_img_by_img():
     
     scores = image_retrieval(base_path=img_path, query_path=query_path, base_batch_size=10)
     img_name, max_score = getMaxSimilarity(scores)
+
     img_item_path = os.path.join(img_path, img_name)
-    img = Image.Open(img_item_path)
+    img = Image.open(img_item_path)
     img.show()
 
     img_url = utils.img_path2url(img_item_path)
     # return jsonify('http://127.0.0.1:5000/dog.jpeg')
-    return img_url
+    return jsonify(img_url)

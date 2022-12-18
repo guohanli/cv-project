@@ -28,6 +28,7 @@ def image_retrieval(base_path, query_path, base_batch_size):
         p = list(img_name)
         base_img_names = p
 
+    feature_txt = 
     print(base_img_names)
     
     features_q = []
@@ -63,16 +64,16 @@ def getTopKSimilarity(scores, K):
             break
 
 
-if __name__ == '__main__':
-    img_path = '/public/home/CS272/liuwen-cs272/image_retrieval/my_image_retrieval/images/'
-    # img_path = the folder path of base images.
-    query_path = '/public/home/CS272/liuwen-cs272/image_retrieval/my_image_retrieval/images/query/Tower07.jpeg'
-    # query_path = the path of query image, only 1 image.
+# if __name__ == '__main__':
+#     img_path = '/public/home/CS272/liuwen-cs272/image_retrieval/my_image_retrieval/images/'
+#     # img_path = the folder path of base images.
+#     query_path = '/public/home/CS272/liuwen-cs272/image_retrieval/my_image_retrieval/images/query/Tower07.jpeg'
+#     # query_path = the path of query image, only 1 image.
     
-    scores = image_retrieval(base_path=img_path, query_path=query_path, base_batch_size=10)
-    img_name, max_score = getMaxSimilarity(scores)
-    print(img_name, max_score)
-    img_item_path = os.path.join(img_path, img_name)
-    image = Image.open(img_item_path)
-    image.show()
+#     scores = image_retrieval(base_path=img_path, query_path=query_path, base_batch_size=10)
+#     img_name, max_score = getMaxSimilarity(scores)
+#     print(img_name, max_score)
+#     img_item_path = os.path.join(img_path, img_name)
+#     image = Image.open(img_item_path)
+#     image.show()
     
