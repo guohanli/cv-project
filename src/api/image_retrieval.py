@@ -22,13 +22,14 @@ def search_img_by_img():
     # todo 刘雯，根据图片找到最佳匹配图片
 
     # img_path, only the folder of images
-    img_path = 'resource/images'
+    img_path = 'resource/album'
     # query_path, path to the query image
-    query_path = 'resource/images/query/Tower07.jpeg' 
+    query_path = 'resource/album/cat.png' 
+    query_name = 'cat.png'
     
-    scores = image_retrieval(base_path=img_path, query_path=query_path, base_batch_size=10)
-    img_name, max_score = getMaxSimilarity(scores)
-
+    scores = image_retrieval(base_path=img_path, query_path=query_path, base_batch_size=28)
+    
+    img_name, max_score = getMaxSimilarity(scores, query_name)
     img_item_path = os.path.join(img_path, img_name)
     img = Image.open(img_item_path)
     img.show()

@@ -4,6 +4,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 from torchvision import models
 
+# import dataset
 from model.image_retrieval import dataset
 
 def image_retrieval(base_path, query_path, base_batch_size):
@@ -18,44 +19,88 @@ def image_retrieval(base_path, query_path, base_batch_size):
     model = models.resnet101(weights=models.ResNet101_Weights.DEFAULT)
     model.to(device)
 
+    pre = False
     features = []
     base_img_names = []
-    for batch, (img, img_name) in enumerate(base_loader):
-        img = img.to(device)
-        feature = model(img)
-        features.append(feature)
 
-        p = list(img_name)
-        base_img_names = p
+    # just go through network
+    if True: 
+        for batch, (img, img_name) in enumerate(base_loader):
+            img = img.to(device)
+            base_features = model(img)
+            features.append(base_features)
 
-    feature_txt = 
+            p = list(img_name)
+            base_img_names = p
+
+        # # write base features into file
+        # feature_txt = open("base_features.txt", mode='w')
+        # feature_txt.writelines(str(features))
+        # feature_txt.close()
+        # print("saved features!")
+        
+    # else:
+    #     # read features
+    #     read_features = open("base_features.txt", mode='r')
+    #     features = read_features.read()
+    #     features = list(features)
+    #     print(features)
+
     print(base_img_names)
     
     features_q = []
     for batch, img in enumerate(query_loader):
         img = img.to(device)
-        feature = model(img)
-        features_q.append(feature)
+        query_feature = model(img)
+        features_q.append(query_feature)
 
-    query_feature = features_q[0][0]
-    scores = {}
+    similarity = batch_cosine_similarity(query_feature, base_features)
+    # print(similarity)
 
-    # calculate similarity
-    for i in range(len(features[0])):
-        similarity = torch.cosine_similarity(query_feature, features[0][i], dim=0)
-        img_name = base_img_names[i]
-        scores[img_name] = similarity
-    
-    # print(scores)
-    sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    scores = similarity.tolist()
+    # print(type(scores), scores)
+    scores = scores[0]
+
+    res = dict()
+    for i in range(len(scores)):
+        res[base_img_names[i]] = scores[i]
+
+    sorted_scores = sorted(res.items(), key=lambda x: x[1], reverse=True)
     scores_asc = dict(sorted_scores)
     print(scores_asc)
     return scores_asc
 
-def getMaxSimilarity(scores):
-    img_name = next(iter(scores))
-    similar_score = scores.get(img_name)
+    # query_feature = features_q[0][0]
+    # scores = {}
+
+    # calculate similarity
+    # for i in range(len(features[0])):
+    #     similarity = torch.cosine_similarity(query_feature, features[0][i], dim=0)
+    #     img_name = base_img_names[i]
+    #     scores[img_name] = similarity
+
+    # # print(scores)
+    # sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    # scores_asc = dict(sorted_scores)
+    # print(scores_asc)
+    # return scores_asc
+
+def getMaxSimilarity(scores, query_name):
+    # img_name = next(iter(scores))
+    for key in scores:
+        if key == query_name:
+            print("equal! pass !")
+            continue
+        else:
+            img_name = key
+            similar_score = scores.get(img_name)
+            break
+
+    # if img_name is query_name:
+    #     img_name = next(iter(scores))
+    #     similar_score = scores.get(img_name)
     return img_name, similar_score
+
 
 def getTopKSimilarity(scores, K):
     for i, (key, value) in scores.items():
@@ -63,16 +108,26 @@ def getTopKSimilarity(scores, K):
         if i > K:
             break
 
+def batch_cosine_similarity(query, base):
+    a_number = query.size(0)
+    b_number = base.size(0)
+
+    a_embedding = query.unsqueeze(1).repeat(1, b_number, 1).view(-1, 1000)
+    b_embedding = base.unsqueeze(0).repeat(a_number, 1, 1).view(-1, 1000)
+
+    similarity = torch.cosine_similarity(a_embedding, b_embedding)
+    similarity = similarity.view(a_number, b_number)
+
+    return similarity
 
 # if __name__ == '__main__':
-#     img_path = '/public/home/CS272/liuwen-cs272/image_retrieval/my_image_retrieval/images/'
+#     img_path = 'resource\images'
 #     # img_path = the folder path of base images.
-#     query_path = '/public/home/CS272/liuwen-cs272/image_retrieval/my_image_retrieval/images/query/Tower07.jpeg'
+#     query_path = 'resource\images\query\Tower07.jpeg'
 #     # query_path = the path of query image, only 1 image.
     
 #     scores = image_retrieval(base_path=img_path, query_path=query_path, base_batch_size=10)
 #     img_name, max_score = getMaxSimilarity(scores)
-#     print(img_name, max_score)
 #     img_item_path = os.path.join(img_path, img_name)
 #     image = Image.open(img_item_path)
 #     image.show()
