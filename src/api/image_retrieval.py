@@ -1,3 +1,5 @@
+import time
+
 from flask import Blueprint
 from flask import jsonify, request
 
@@ -15,6 +17,7 @@ image_retrieval_api = Blueprint('image_retrieval_api', __name__)
 
 @image_retrieval_api.route('/search_img_by_img', methods=['POST'])
 def search_img_by_img():
+
     file = request.files.get('query_image')
     img_bytes = file.read()
     img = utils.transform_image_bytes2tensor(img_bytes)
@@ -35,5 +38,4 @@ def search_img_by_img():
     img.show()
 
     img_url = utils.img_path2url(img_item_path)
-    # return jsonify('http://127.0.0.1:5000/dog.jpeg')
     return jsonify(img_url)
